@@ -7,7 +7,7 @@ describe("Local HelloEthernaut Test", function () {
  it("First challenge solve", async () => {
   const Hello = await ethers.getContractFactory("HelloEthernaut");
   
-  const hello = await Hello.deploy('REDACTED');
+  const hello = await Hello.deploy('ethernaut0');
   await hello.waitForDeployment();
   const infoOutput = "";
   try {

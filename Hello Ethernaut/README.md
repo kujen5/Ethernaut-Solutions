@@ -242,7 +242,7 @@ describe("Local HelloEthernaut Test", function () {
  it("First challenge solve", async () => {
   const Hello = await ethers.getContractFactory("HelloEthernaut");
   
-  const hello = await Hello.deploy('REDACTED');
+  const hello = await Hello.deploy('ethernaut0');
   await hello.waitForDeployment();
 
   const infoOutput = await hello.info();
@@ -279,131 +279,24 @@ describe("Local HelloEthernaut Test", function () {
 Output:
 
 ```javascript
-Info() Output:  You will find what you need in info1().
+$ npx hardhat test test/HelloEthernautLocal.ts
+No contracts to compile
+Running Mocha tests
+
+
+  Local HelloEthernaut Test
+Info() Output:
 Info1() Output:  Try info2(), but with "hello" as a parameter.
 Info2() Output:  The property infoNum holds the number of the next info method to call.
 InfoNum() Output:  42
 Info42() Output:  theMethodName is the name of the next method.
 theMethodName() Output:  The method name is method7123949.
 method7123949() Output:  If you know the password, submit it to authenticate().
-password() Output:  REDACTED
-```
+password() Output:  ethernaut0
+    ✔ First challenge solve (70ms)
 
-### Exploitation Steps - On-Chain contract
 
-Going even a bit more, we will perform the exploitation directly on the contract that is deployed on the Ethereum Sepolia chain.
-Since the Ethernaut website directly pushes the code on-chain, we can just fetch the contract address and adjust the exploit for it.
-You can find the exploit code under `test/HelloEthernautOnChain.ts` (hardhat).
-Also of course we have to include the contract ABI so we could fully interact with it.
-Full code:
-
-```javascript
-import hre from "hardhat";
-import "dotenv/config";
-const { ethers, networkHelpers } = await hre.network.connect();
-
-async function main() {
-  const instanceAddress = "0x30512bC277847b5975934e106D07168460016782";
-
-  const contractAbi = [
-    "function info() view returns (string)",
-    "function info1() view returns (string)",
-    "function info2(string) view returns (string)",
-    "function infoNum() view returns (uint8)",
-    "function info42() view returns (string)",
-    "function theMethodName() view returns (string)",
-    "function method7123949() view returns (string)",
-    "function password() view returns (string)",
-    "function authenticate(string)"
-  ];
-
-  const hello = await ethers.getContractAt(contractAbi, instanceAddress);
-
-  console.log("info() Output :", await hello.info());
-  console.log("info1() Output :", await hello.info1());
-  console.log("info2('hello') Output :", await hello.info2("hello"));
-  console.log("infoNum() Output :", Number(await hello.infoNum()));
-  console.log("info42() Output :", await hello.info42());
-  console.log("theMethodName() Output :", await hello.theMethodName());
-  console.log("method7123949() Output :", await hello.method7123949());
-
-  const password = await hello.password();
-  console.log("password() :", password);
-
-  console.log("\n[+] Sending authenticate transaction.");
-  const tx = await hello.authenticate(password);
-  console.log("[+] Tx submitted  :", tx.hash);
-  await tx.wait();
-
-  console.log("\n[+] Level 0 completed");
-}
-
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
-```
-Output:
-
-```javascript
+  1 passing (73ms)
 
 ```
 
-
-# Sample Hardhat 3 Beta Project (`mocha` and `ethers`)
-
-This project showcases a Hardhat 3 Beta project using `mocha` for tests and the `ethers` library for Ethereum interactions.
-
-To learn more about the Hardhat 3 Beta, please visit the [Getting Started guide](https://hardhat.org/docs/getting-started#getting-started-with-hardhat-3). To share your feedback, join our [Hardhat 3 Beta](https://hardhat.org/hardhat3-beta-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new) in our GitHub issue tracker.
-
-## Project Overview
-
-This example project includes:
-
-- A simple Hardhat configuration file.
-- Foundry-compatible Solidity unit tests.
-- TypeScript integration tests using `mocha` and ethers.js
-- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
-
-## Usage
-
-### Running Tests
-
-To run all the tests in the project, execute the following command:
-
-```shell
-npx hardhat test
-```
-
-You can also selectively run the Solidity or `mocha` tests:
-
-```shell
-npx hardhat test solidity
-npx hardhat test mocha
-```
-
-### Make a deployment to Sepolia
-
-This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
-
-To run the deployment to a local chain:
-
-```shell
-npx hardhat ignition deploy ignition/modules/Counter.ts
-```
-
-To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
-
-You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
-
-To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
-
-```shell
-npx hardhat keystore set SEPOLIA_PRIVATE_KEY
-```
-
-After setting the variable, you can run the deployment with the Sepolia network:
-
-```shell
-npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
-```
