@@ -27,7 +27,7 @@ describe("Fallback Test", function () {
 
   // make sure deployer is the owner
   const owner = await fallback.owner();
-  expect(owner).to.equal(deployer);
+  expect(owner).to.equal(deployer)
 
   // contribute as attacker
   const fallbackAsAttacker = fallback.connect(attacker);
@@ -46,7 +46,9 @@ describe("Fallback Test", function () {
 
 
   // check if attacker is now owner
-  expect(await fallback.owner()).to.equal(attacker);
+  if (expect(await fallback.owner()).to.equal(attacker)){
+    console.log("Attacker is now owner\n");
+  };
 
   // withdraw all funds
   console.log('---Attacker now withdrawing funds---\n')
