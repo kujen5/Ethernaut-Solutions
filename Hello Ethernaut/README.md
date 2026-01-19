@@ -24,9 +24,11 @@ The `Hello Ethernaut` challenge is pretty basic as it simply teaches you how to 
 ### Exploitation Steps - Developer Tools
 
 1. First of all, we will deploy a new contract for us to interact with by pressing `Get new instance` (don't forget to create a [Metamask wallet](https://metamask.io/) if you don't have one):
+
 ![Launch instance](images/1.png)
 
 This will prompt us with an authorization window from Metamask:
+
 ![Metamask](images/2.png)
 
 2. After we launch the instance, we must open developer tools on our browser to interact with the contract. We can do so by pressing `Shift + Ctrl + I`. We will find this welcome message from from the contract:
