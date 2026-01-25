@@ -1,26 +1,35 @@
 import { expect } from "chai";
 import hre from "hardhat";
-import { defineConfig } from "hardhat/config";
 import hardhatNetworkHelpers from "@nomicfoundation/hardhat-network-helpers";
+
 const { ethers, networkHelpers } = await hre.network.connect();
 
-export default defineConfig({
-  plugins: [hardhatNetworkHelpers],
-});
-
 describe("Coin Flip Test", function () {
+  it("Coin Flip block", async () => {
+    const [deployer, attacker] = await ethers.getSigners();
+    await networkHelpers.setBalance(
+      attacker.address,
+      ethers.parseEther("1")
+    );
 
- it("Coin Flip block", async () => {
+    const CoinFlip = await ethers.getContractFactory("CoinFlip", deployer);
+    const coinFlip = await CoinFlip.deploy();
+    await coinFlip.waitForDeployment();
 
-  // setup users
-  const [deployer, attacker] = await ethers.getSigners();
-  await networkHelpers.setBalance(attacker.address, ethers.parseEther("1"));
+    const HackCoinFlip = await ethers.getContractFactory(
+      "HackCoinFlip",
+      attacker
+    );
+    const hack = await HackCoinFlip.deploy(await coinFlip.getAddress());
+    await hack.waitForDeployment();
 
-  // deploy contract
-  const Fallback = await ethers.getContractFactory("CoinFlip",deployer);
-  const fallback=await Fallback.deploy();
-  await fallback.waitForDeployment();
+    for (let i = 0; i < 10; i++) {
+      const tx = await hack.makeGuess();
+      await tx.wait();
 
+      await networkHelpers.mine(1);
+    }
 
+    expect(await coinFlip.consecutiveWins()).to.equal(10);
   });
 });
