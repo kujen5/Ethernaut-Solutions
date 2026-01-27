@@ -17,7 +17,7 @@ Hope you enjoy it and learn something new!
 
 [Link to the original challenge.](https://ethernaut.openzeppelin.com/level/1)
 
-[Github repo link that contains challenge code and solver.]()
+[Github repo link that contains challenge code and solver.](https://github.com/kujen5/Ethernaut-Solutions/tree/main/Fallback)
 
 ## Challenge Description
 
