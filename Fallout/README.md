@@ -1,6 +1,4 @@
-# Overview
-
-# Overview
+#Overview
 I recently launched a blog post series where I will be posting about my journey in Web3/Blockchain security.
 During this series, I will be posting about Web3/Blockchain bugs and exploits, alongside writeups for [Ethernaut](https://ethernaut.openzeppelin.com/) and [Damn Vulnerable DeFi](https://www.damnvulnerabledefi.xyz/) challenges.
 
